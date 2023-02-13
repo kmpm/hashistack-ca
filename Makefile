@@ -53,17 +53,17 @@ endef
 
 define CA_CSR_TEMPLATE
 {
-    "CN": "Vault CA",
+    "CN": "Internal CA",
     "key": {
         "algo": "rsa",
-        "size": 2048
+        "size": 4096
     },
     "names": [
         {
-            "C": "<country>",
-            "L": "<city>",
-            "O": "Vault",
-            "ST": "<region>"
+            "C": "$(COUNTRY)",
+            "L": "$(CITY)",
+            "O": "Internal",
+            "ST": "$(REGION)"
         }
     ]
 }
@@ -75,10 +75,12 @@ all: ca
 $(GO_TAR):
 	wget https://dl.google.com/go/$(GO_TAR)
 
+
 $(GO): $(GO_TAR)
 	sudo tar -C /usr/local -xzf $(GO_TAR)
 	sudo touch $(GO)
 	grep -qxF 'export PATH=$$PATH:/usr/local/go/bin' /etc/profile || echo 'export PATH=$$PATH:/usr/local/go/bin' | sudo tee -a /etc/profile > /dev/null
+
 
 $(CFSSL_SRC):
 	sudo git clone https://github.com/cloudflare/cfssl.git $(CFSSL_SRC)
